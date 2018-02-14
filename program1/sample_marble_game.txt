@@ -1,0 +1,103 @@
+state	2	accept
+
+state	6	accept
+
+state	13	accept
+
+state	14	accept
+
+state	16	accept
+
+state	20	accept
+
+state	22	accept
+
+state	1	start
+
+transition	1	x	8
+
+transition	1	y	14
+
+transition	2	x	8
+
+transition	2	y	14
+
+transition	3	x	7
+
+transition	3	y	16
+
+transition	4	x	10
+
+transition	4	y	11
+
+transition	5	x	9
+
+transition	5	y	12
+
+transition	6	x	9
+
+transition	6	y	12
+
+transition	7	x	2
+
+transition	7	y	20
+
+transition	8	x	3
+
+transition	8	y	22
+
+transition	9	x	4
+
+transition	9	y	17
+
+transition	10	x	6
+
+transition	10	y	18
+
+transition	11	x	18
+
+transition	11	y	3
+
+transition	12	x	17
+
+transition	12	y	1
+
+transition	13	x	17
+
+transition	13	y	1
+
+transition	14	x	21
+
+transition	14	y	5
+
+transition	15	x	19
+
+transition	15	y	4
+
+transition	16	x	19
+
+transition	16	y	4
+
+transition	17	x	11
+
+transition	17	y	8
+
+transition	18	x	13
+
+transition	18	y	7
+
+transition	19	x	14
+
+transition	19	y	10
+
+transition	20	x	14
+
+transition	20	y	10
+
+transition	21	x	15
+
+transition	21	y	9
+
+transition	22	x	15
+
+transition	22	y	9
