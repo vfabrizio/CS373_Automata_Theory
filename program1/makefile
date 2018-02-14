@@ -5,3 +5,6 @@ fabrizio_p1: fabrizio_p1.cpp
 
 clean:
 	rm -rf fabrizio_p1
+
+checkmem:
+	valgrind ./fabrizio_p1 sample2.txt 0z0zzz0000
