@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
 		myfile >> contents;
 	}
 
+	/* print tests
 	cout << "start state: " << startstate << endl;
     for(list<int>::iterator i = accept_states.begin(); i != accept_states.end(); ++i){
         cout << *i << endl;
@@ -68,6 +69,7 @@ int main(int argc, char *argv[]) {
     for(multimap<int, string>:: const_iterator i = transitions.begin(); i!= transitions.end();++i){
         cout << i->first << '\t' << i->second << endl;
     }
+	*/
 
 	list<int> nfa;
 	list<int> final_state;
@@ -107,7 +109,7 @@ int main(int argc, char *argv[]) {
 			i++;
 		}
 		//cout << "hi in while" << endl;
-		cout << "nfa_iter in while: " << nfa_iter << endl;
+		//cout << "nfa_iter in while: " << nfa_iter << endl;
 
 		if (nfa_iter != nfa.back()) {
 			nfa_iter++;
@@ -123,21 +125,23 @@ int main(int argc, char *argv[]) {
 		} else {
 			input.clear();
 		}
-		cout << "input len: " << input.length() << endl;
+		//cout << "input len: " << input.length() << endl;
 	}
 	if (final_state.empty()) {
 		cout << "reject" << endl;
 		return 0;
 	}
 
+	/* print tests
 	cout << "nfa:" << endl;
 	for(list<int>::iterator i = nfa.begin(); i != nfa.end(); ++i){
         cout << *i << endl;
     }
 
     cout << "final: " << endl;
-	
+	*/
 
+    //print accept or reject
     if (type.compare("accept") == 0) {
     	cout << "accept";
     }else {
