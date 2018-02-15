@@ -104,12 +104,9 @@ int main(int argc, char *argv[]) {
 				}else {
 					type = "reject";
 				}
-				//cout << "hi in for" << endl;
 			}
 			i++;
 		}
-		//cout << "hi in while" << endl;
-		//cout << "nfa_iter in while: " << nfa_iter << endl;
 
 		if (nfa_iter != nfa.back()) {
 			nfa_iter++;
@@ -125,21 +122,12 @@ int main(int argc, char *argv[]) {
 		} else {
 			input.clear();
 		}
-		//cout << "input len: " << input.length() << endl;
+
 	}
 	if (final_state.empty()) {
 		cout << "reject" << endl;
 		return 0;
 	}
-
-	/* print tests
-	cout << "nfa:" << endl;
-	for(list<int>::iterator i = nfa.begin(); i != nfa.end(); ++i){
-        cout << *i << endl;
-    }
-
-    cout << "final: " << endl;
-	*/
 
     //print accept or reject
     if (type.compare("accept") == 0) {
