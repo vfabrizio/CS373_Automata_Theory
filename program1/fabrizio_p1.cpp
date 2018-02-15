@@ -42,7 +42,8 @@ int main(int argc, char *argv[]) {
 
 			if (contents.find("accept") != string::npos) {
 				accept_states.emplace_back(state);
-			} else if (contents.find("start") != string::npos) {
+			}
+			if (contents.find("start") != string::npos) {
 				startstate = state;
 			}
 		} else if (contents.compare("transition") == 0) {
