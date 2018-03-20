@@ -1,0 +1,8 @@
+accept 12
+accept 12
+reject 0 1 5 10
+reject
+accept 7 5
+accept 16 17 7 5
+reject 13
+reject 8 29 30
