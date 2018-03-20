@@ -2,11 +2,17 @@
 #include <string>
 #include <list>
 #include <map>
+#include <vector>
 #include <fstream>
 #include <cstdlib>
 #include <algorithm>
 
 using namespace std;
+
+typedef struct config {
+	int state;
+	string str;
+}config;
 
 int main(int argc, char *argv[]) {
 	ifstream myfile;
@@ -38,14 +44,17 @@ int main(int argc, char *argv[]) {
 	while (!myfile.eof()) {
 		if (contents.compare("state") == 0) {
 			myfile >> state;
-			myfile >> contents;
+			getline(myfile, contents);
 
-			if (contents.find("accept") != string::npos) {
+			if (contents.find("acceptstart") != string::npos || contents.find("start\taccept") != string::npos || contents.find("accept\tstart") != string::npos) {
+				startstate = state;
+				accept_states.emplace_back(state);
+			} else if (contents.find("start") != string::npos) {
+				startstate = state;
+			} else if (contents.find("accept") != string::npos) {
 				accept_states.emplace_back(state);
 			}
-			if (contents.find("start") != string::npos) {
-				startstate = state;
-			}
+
 		} else if (contents.compare("transition") == 0) {
 			myfile >> state;
 			myfile >> trans;
@@ -61,84 +70,86 @@ int main(int argc, char *argv[]) {
 		myfile >> contents;
 	}
 
-	/* print tests
+	//cout << "fin parse" << endl;
+
+	/*//print tests
 	cout << "start state: " << startstate << endl;
+	cout << "accept states: " << endl;
     for(list<int>::iterator i = accept_states.begin(); i != accept_states.end(); ++i){
         cout << *i << endl;
     }
 
     for(multimap<int, string>:: const_iterator i = transitions.begin(); i!= transitions.end();++i){
         cout << i->first << '\t' << i->second << endl;
-    }
-	*/
+    }*/
 
-	list<int> nfa;
-	list<int> final_state;
+	vector<config> nfa;
+	nfa.push_back({startstate, input});
+	multimap<int, string>::iterator i;
 
-	nfa.emplace_back(startstate);
-	
-	multimap<int,string>::iterator i = transitions.find(startstate);
-	
-	int nfa_iter = nfa.front();
+	list<int> end_states;
+	list<int> output_states;
+
+	int current_state;
+	string current_string;
 
 	list<int>::iterator check;
 	list<int>::iterator check2;
-	list<int>::iterator check3;
-	string type;
 
+	while (!nfa.empty()) {
+		current_state = nfa.front().state;
+		current_string = nfa.front().str;
 
-	while (input.length() >= 1) {
-		for (int j = 0; j < transitions.count(i->first); j++) {
-			if (input[0] == i->second[0]) {
-				tostate = atoi(((i->second).substr(1)).c_str());
-				check = find(nfa.begin(), nfa.end(), tostate);
-				if (check == nfa.end()) { // tostate isnt in nfa list
-					nfa.emplace_back(tostate);
-				}
-				check2 = find(accept_states.begin(), accept_states.end(), tostate);
-				check3 = find(final_state.begin(), final_state.end(), tostate);
-				if ((input.length() == 1 || check2 != accept_states.end()) && check3 == final_state.end()) {
-					final_state.emplace_back(tostate);
-				}
-				if (check2 != accept_states.end()) {
-					type = "accept";
-				}else {
-					type = "reject";
-				}
+		//cout << "state: " << current_state << " string: " << current_string << endl;
+
+		i = transitions.find(current_state);
+
+		for (int j = 0; j < transitions.count(current_state); j++) {
+			//if there is a match, add to vector
+			//put in state we are going to and the new string
+
+			if ((i->second)[0] == current_string[0]) {
+				nfa.push_back({stoi((i->second).substr(1)), current_string.substr(1)});
 			}
+
 			i++;
 		}
 
-		if (nfa_iter != nfa.back()) {
-			nfa_iter++;
-			i = transitions.find(nfa_iter);
-		} else {
-			i = transitions.find(nfa_iter);
+		if (nfa.front().str.length() == 0) {
+			check2 = find(end_states.begin(), end_states.end(), current_state);
+			if (check2 == end_states.end()) {
+				end_states.push_back(current_state);
+			}
 		}
-
-		if (input.length() > 2) {
-			input = input.substr(1);
-		} else if (input.length() == 2) {
-			input = string(1, input[1]);
-		} else {
-			input.clear();
-		}
-
-	}
-	if (final_state.empty()) {
-		cout << "reject" << endl;
-		return 0;
+		nfa.erase(nfa.begin());
 	}
 
-    //print accept or reject
-    if (type.compare("accept") == 0) {
-    	cout << "accept";
-    }else {
-    	cout << "reject";
-    }
-    for(list<int>::iterator i = final_state.begin(); i != final_state.end(); ++i){
-        cout << " " << *i;
-    }
-    cout << endl;
+	list<int>::iterator output_itr;
+	list<int>::iterator end_itr;
+
+
+	for (end_itr = end_states.begin(); end_itr != end_states.end(); end_itr++) {
+		check = find(accept_states.begin(), accept_states.end(), *end_itr);
+		check2 = find(output_states.begin(), output_states.end(), *end_itr);
+		if (check != accept_states.end() && check2 == output_states.end()) {
+			//if an accept state and not in output already
+			output_states.push_back(*end_itr);
+		}
+	}
+
+	if (output_states.empty()) {
+		cout << "reject";
+		for (end_itr = end_states.begin(); end_itr != end_states.end(); end_itr++) {
+			cout << " " << *end_itr;
+		}
+		cout << endl;
+	} else {
+		cout << "accept";
+		for (output_itr = output_states.begin(); output_itr != output_states.end(); output_itr++) {
+			cout << " " << *output_itr;
+		}
+		cout << endl;
+	}
+
 
 }
